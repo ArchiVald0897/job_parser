@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import requests
 from vacancies import Vacancies
-from seve_json import JSON_save
+from save_json import JSON_save
 
 
 class API(ABC):
