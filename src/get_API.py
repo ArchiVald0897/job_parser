@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import requests
 from vacancies import Vacancies
 from save_json import JSON_save
+import os
 
 
 class API(ABC):
@@ -64,6 +65,57 @@ class HHAPI(API):
             print("----------------------------------------------------------------------------------------------")
             print(vac)
             user_answer = input("Добавить вакансию? (Да/Нет) ").lower()
+            if user_answer == "да" or user_answer == "yes" or user_answer == "lf":
+                my_object = JSON_save()
+                my_object.add_vacancy(vac.info)
+            elif user_answer == "стоп" or user_answer == "stop":
+                break
+            else:
+                continue
+
+
+class SJAPI(API):
+    """Класс для поиска вакансий на SuperJob"""
+
+    base_url = "https://api.superjob.ru/2.0/vacancies"
+    api_key: str = os.getenv('SJ_API_KEY')
+
+    def search_vacancies(self, keyword, quantity=15):
+        """Подключение к API SuperJob"""
+
+        params = {
+            "keyword": keyword,  # Ключевое слово
+            "count": quantity  # Количество вакансий для вывода
+        }
+
+        headers = {"X-Api-App-Id": self.api_key}
+
+        response = requests.get(self.base_url, params=params, headers=headers)
+        if response.status_code == 200:
+            vacancies = response.json().get("objects")
+            return vacancies
+        else:
+            print("Не удалось выполнить запрос к API SuperJob")
+
+    def get_vacancy_info(self, vacancies):
+        """Получение информации для создания класса Vacancy"""
+
+        for vacancy in vacancies:
+            title = vacancy.get("profession")
+            vacancy_url = vacancy.get("link")
+            vacancy_id = vacancy.get("id")
+            company_name = vacancy.get("client").get("title")
+            work_place = vacancy.get("town").get("title")
+            salary_from = vacancy.get("payment_from") if not None else 0
+            salary_to = vacancy.get("payment_to") if not None else 0
+            salary_currency = vacancy.get("currency")
+            experience = vacancy.get("experience").get("title")
+
+            vac = Vacancies(title, vacancy_url, vacancy_id, company_name, work_place,
+                            salary_from, salary_to, salary_currency, experience)
+            print("----------------------------------------------------------------------------------------------")
+            print(vac)
+            user_answer = input("Добавить вакансию? (ДА/НЕТ) ").lower()
             if user_answer == "да" or user_answer == "yes" or user_answer == "lf":
                 my_object = JSON_save()
                 my_object.add_vacancy(vac.info)
