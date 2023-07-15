@@ -17,3 +17,33 @@ class Vacancies:
                          company_name=self.company_name, work_place=self.work_place,
                          salary_from=self.salary_from, salary_to=self.salary_to,
                          salary_currency=self.salary_currency, experience=self.experience)
+
+    def __str__(self):
+        """Возвращает строковое представление объекта."""
+        return f"Вакансия: {self.title}\n" \
+               f"Ссылка на вакансию: {self.vacancy_url}\n" \
+               f"ID: {self.vacancy_id}\n" \
+               f"Компания: {self.company_name}\n" \
+               f"Место работы: {self.work_place}\n" \
+               f"Зарплата: {self.salary_from} - {self.salary_to} {self.salary_currency}\n" \
+               f"Опыт: {self.experience}"
+
+    def __repr__(self):
+        """ Возвращает читаемое строковое представление объекта класса."""
+        return f"{self.__class__.__name__}('{self.title}', {self.vacancy_url}, {self.vacancy_id}, " \
+               f"{self.company_name}, {self.work_place}, {self.experience}, " \
+               f"{self.salary_from}, {self.salary_to}, {self.salary_currency})"
+
+    def __eq__(self, other):
+        """Проверяет, равны ли объект self и объект other по значению атрибута 'salary_from'."""
+        return self.salary_from == other.salary_from
+
+    def __lt__(self, other):
+        """Сравнивает объект self с объектом other на основе значения атрибута 'salary_from'."""
+        return self.salary_from < other.salary_from
+
+    def validate_salary(self):
+        """Проверяет, является ли значение переменной salary_from целым числом и больше или равным нулю."""
+        if isinstance(self.salary_from, int) and self.salary_from >= 0:
+            return True
+        return False
