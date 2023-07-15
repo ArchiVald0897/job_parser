@@ -1,4 +1,4 @@
-class Vacancy:
+class Vacancies:
     """Класс для работы с вакансией из HeadHunter и SuperJob"""
 
     def __init__(self, title: str, vacancy_url: str, vacancy_id: int, company_name: str, work_place: str,

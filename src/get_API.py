@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import requests
+from vacancies import Vacancies
 
 
 class API(ABC):
@@ -34,3 +35,15 @@ class HHAPI(API):
             return vacancies
         else:
             print(f"Не удалось выполнить запрос к API HeadHunter")
+
+    def vacancies_info(self, vacancies):
+        """Получение информации для создания класса Vacancies"""
+
+        for vacancy in vacancies:
+            title = vacancy.get("name")
+            vacancy_url = vacancy.get("alternate_url")
+            vacancy_id = vacancy.get("id")
+            company_name = vacancy.get("employer").get("name")
+            work_place = vacancy.get("area").get("name")
+            salary_from = vacancy.get("salary").get("from")
+
