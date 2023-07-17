@@ -1,6 +1,6 @@
 from get_API import HHAPI
 from get_API import SJAPI
-from save_json import JSON_save(VacancyFile)
+from save_json import JSON_save
 
 
 def headhunter_vacancies_search():
@@ -56,7 +56,7 @@ def search():
 
 
 def main():
-    my_object = JSON_save(VacancyFile)
+    my_object = JSON_save
     search()
     continue_search = input("Продолжить поиск на другой платформе? ")
     if continue_search == "да" or continue_search == "yes" or continue_search == "lf":
