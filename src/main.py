@@ -1,6 +1,6 @@
 from get_API import HHAPI
 from get_API import SJAPI
-from save_json import JSON_save
+from save_json import JSON_save, VacancyFile
 
 
 def headhunter_vacancies_search():
@@ -48,7 +48,7 @@ def return_sorted_vacancies(sorted_vacancies_list):
 
 def search():
     """Выбирает платформу для поиска вакансий и вызывает соответствующую функцию."""
-    platforms = input("Выберите платформу для поиска вакансии: HeadHunter или SuperJob? ").lower()
+    platforms = input("Выберите платформу для поиска вакансии: HeadHunter или SuperJob? \n").lower()
     if platforms == "hh" or platforms == "headhunter" or platforms == "хх":
         headhunter_vacancies_search()
     elif platforms == "sj" or platforms == "superjob" or platforms == "сд":
@@ -56,9 +56,9 @@ def search():
 
 
 def main():
-    my_object = JSON_save()
+    my_object = JSON_save
     search()
-    continue_search = input("Продолжить поиск на другой платформе? ")
+    continue_search = input("Продолжить поиск на другой платформе? \n")
     if continue_search == "да" or continue_search == "yes" or continue_search == "lf":
         search()
 
