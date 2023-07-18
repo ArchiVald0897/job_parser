@@ -1,16 +1,16 @@
-from get_API import HHAPI
-from get_API import SJAPI
-from save_json import JSON_save
+from get_API import HeadHunterAPI
+from get_API import SuperJobAPI
+from save_json import JSONSaver
 
 
 def headhunter_vacancies_search():
     """Функция для поиска вакансий на Headhunter."""
-    hh_api = HHAPI()
+    hh_api = HeadHunterAPI()
     search_query = input("Введите через пробел ключевые слова, в том числе город поиска: ")
     vacancy_quantity = input("Введите количество вакансий: ")
     if search_query != '' and vacancy_quantity != '' and vacancy_quantity.isdigit():
         search_vacancies = hh_api.search_vacancies(search_query, vacancy_quantity)
-        hh_api.vacancies_info(search_vacancies)
+        hh_api.get_vacancy_info(search_vacancies)
     else:
         print("Введите требуемые значения.")
         headhunter_vacancies_search()
@@ -18,7 +18,7 @@ def headhunter_vacancies_search():
 
 def superjob_vacancies_search():
     """Функция для поиска вакансий на SuperJob."""
-    superjob_api = SJAPI()
+    superjob_api = SuperJobAPI()
     search_query = input("Введите через пробел ключевые слова, в том числе город поиска: ")
     vacancy_quantity = input("Введите количество вакансий: ")
     if search_query != '' and vacancy_quantity != '' and vacancy_quantity.isdigit():
@@ -56,7 +56,7 @@ def search():
 
 
 def main():
-    my_object = JSON_save
+    my_object = JSONSaver()
     search()
     continue_search = input("Продолжить поиск на другой платформе? ")
     if continue_search == "да" or continue_search == "yes" or continue_search == "lf":
