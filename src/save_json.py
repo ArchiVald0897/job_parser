@@ -3,7 +3,7 @@ import os
 from abc import ABC, abstractmethod
 
 
-class VacancyFile(ABC):
+class VacancyFileManager(ABC):
     @abstractmethod
     def add_vacancy(self, vacancy_data):
         pass
@@ -17,7 +17,7 @@ class VacancyFile(ABC):
         pass
 
 
-class JSON_save(VacancyFile):
+class JSONSaver(VacancyFileManager):
 
     def add_vacancy(self, data: dict) -> None:
         """Добавляет вакансии в список и сохраняет его в JSON файл."""
@@ -44,10 +44,15 @@ class JSON_save(VacancyFile):
 
         return filtered_vacs
 
-    def delete_vacancies(self, vacancy_id):
+    def delete_vacancy(self, vacancy_id):
         """Удаляет вакансии из списка в JSON файле по 'vacancy_id', и перезаписывает список."""
+        # Открытие JSON файла
         with open("my_vacancies.json", "r", encoding="utf-8") as file:
             data = json.load(file)
+
+        # Удаление словарей с ключом 'vacancy_id' равным переданному значению
         data = [dictionary for dictionary in data if dictionary["vacancy_id"] != vacancy_id]
+
+        # Перезапись конечного списка в JSON файл
         with open("my_vacancies.json", "w", encoding="utf-8") as file:
             json.dump(data, file, ensure_ascii=False)
