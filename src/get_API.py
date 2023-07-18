@@ -1,34 +1,36 @@
+import os
 from abc import ABC, abstractmethod
 import requests
-from vacancies import Vacancies
-from save_json import JSON_save
-import os
+from save_json import JSONSaver
+from vacancies import Vacancy
 
 
 class API(ABC):
 
     @abstractmethod
     def search_vacancies(self, keyword, quantity=15):
-        """получение вакансий по API"""
+        """Подключение к API и получение вакансий"""
         pass
 
     @abstractmethod
-    def get_info(self, response):
+    def get_vacancy_info(self, response):
         """Получение информации по вакансии"""
         pass
 
 
-class HHAPI(API):
-    """Поиск вакансий на HeadHunter"""
-    hh_url = 'https://api.hh.ru/vacancies'
+class HeadHunterAPI(API):
+    """Класс для поиска вакансий на HeadHunter"""
+
+    hh_base_url = 'https://api.hh.ru/vacancies'
 
     def search_vacancies(self, keyword, quantity=15, page=1):
         """Подключение к API HeadHunter"""
+
         url = "https://api.hh.ru/vacancies"
         params = {
-            "text": keyword,
-            "per_page": quantity,
-            "only_with_salary": 'true'
+            "text": keyword,  # Ключевое слово
+            "per_page": quantity,  # Количество вакансий для вывода
+            "only_with_salary": 'true'  # Только с информацией по зарплате
         }
 
         response = requests.get(url, params=params)
@@ -38,8 +40,8 @@ class HHAPI(API):
         else:
             print(f"Не удалось выполнить запрос к API HeadHunter")
 
-    def vacancies_info(self, vacancies):
-        """Получение информации для создания класса Vacancies"""
+    def get_vacancy_info(self, vacancies):
+        """Получение информации, необходимой для создания экземпляра вакансии класса Vacancy"""
 
         for vacancy in vacancies:
             title = vacancy.get("name")
@@ -60,13 +62,13 @@ class HHAPI(API):
             salary_currency = vacancy.get("salary").get("currency")
             experience = vacancy.get("experience").get("name")
 
-            vac = Vacancies(title, vacancy_url, vacancy_id, company_name, work_place,
-                            salary_from, salary_to, salary_currency, experience)
+            vac = Vacancy(title, vacancy_url, vacancy_id, company_name, work_place,
+                          salary_from, salary_to, salary_currency, experience)
             print("----------------------------------------------------------------------------------------------")
             print(vac)
-            user_answer = input("Добавить вакансию? (Да/Нет) ").lower()
+            user_answer = input("Добавить вакансию? (ДА/НЕТ) ").lower()
             if user_answer == "да" or user_answer == "yes" or user_answer == "lf":
-                my_object = JSON_save()
+                my_object = JSONSaver()
                 my_object.add_vacancy(vac.info)
             elif user_answer == "стоп" or user_answer == "stop":
                 break
@@ -74,7 +76,7 @@ class HHAPI(API):
                 continue
 
 
-class SJAPI(API):
+class SuperJobAPI(API):
     """Класс для поиска вакансий на SuperJob"""
 
     base_url = "https://api.superjob.ru/2.0/vacancies"
@@ -98,7 +100,7 @@ class SJAPI(API):
             print("Не удалось выполнить запрос к API SuperJob")
 
     def get_vacancy_info(self, vacancies):
-        """Получение информации для создания класса Vacancy"""
+        """Получение информации, необходимой для создания экземпляра вакансии класса Vacancy"""
 
         for vacancy in vacancies:
             title = vacancy.get("profession")
@@ -111,13 +113,13 @@ class SJAPI(API):
             salary_currency = vacancy.get("currency")
             experience = vacancy.get("experience").get("title")
 
-            vac = Vacancies(title, vacancy_url, vacancy_id, company_name, work_place,
-                            salary_from, salary_to, salary_currency, experience)
+            vac = Vacancy(title, vacancy_url, vacancy_id, company_name, work_place,
+                          salary_from, salary_to, salary_currency, experience)
             print("----------------------------------------------------------------------------------------------")
             print(vac)
             user_answer = input("Добавить вакансию? (ДА/НЕТ) ").lower()
             if user_answer == "да" or user_answer == "yes" or user_answer == "lf":
-                my_object = JSON_save()
+                my_object = JSONSaver()
                 my_object.add_vacancy(vac.info)
             elif user_answer == "стоп" or user_answer == "stop":
                 break
